@@ -1,0 +1,78 @@
+version: "3"
+
+services:
+  gate:
+    image: cr.yandex/crp7tgcto5tup4npge0p/falconb2b-gate:prod
+    restart: always
+    environment:
+      - NODE_ENV=staging
+      - TZ=Europe/Moscow
+    ports:
+      - "8008:8008"
+    network_mode: "host"
+
+  migration:
+    image: cr.yandex/crp7tgcto5tup4npge0p/falconb2b-services:prod
+    command: sh -c "cd /app/packages/db && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all"
+    environment:
+      - NODE_ENV=staging
+      - DB_CONN_STRING=${DB_CONN_STRING}
+      - TZ=Europe/Moscow
+    network_mode: "host"
+
+  serv:
+    image: cr.yandex/crp7tgcto5tup4npge0p/falconb2b-services:prod
+    restart: always
+    environment:
+      - NODE_ENV=staging
+      - DB_CONN_STRING=${DB_CONN_STRING}
+      - TZ=Europe/Moscow
+    ports:
+      - "8012:8012"
+    network_mode: "host"
+
+  admin:
+    restart: always
+    image: cr.yandex/crp7tgcto5tup4npge0p/falconb2b-admin:prod
+    environment:
+      - NODE_ENV=staging
+      - DB_CONN_STRING=${DB_CONN_STRING}
+      - TZ=Europe/Moscow
+    ports:
+      - "8009:8009"
+    network_mode: "host"
+
+  nats:
+    image: nats
+    restart: always
+    ports:
+      - "4222:4222"
+    network_mode: "host"
+
+  minio:
+    image: minio/minio
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - "/data:/data"
+    command: server /data
+    network_mode: "host"
+
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    network_mode: "host"
+
+  memcached:
+    image: memcached
+    restart: always
+    ports:
+      - "11211:11211"
+    network_mode: "host"
+
+volumes:
+  minio_data:
+    driver: local

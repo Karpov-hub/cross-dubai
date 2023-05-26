@@ -1,0 +1,6 @@
+1. Меняем юзера на того, от которого работает CI
+2. Меняем права на служебные каталоги и файлы нжинкса
+3. Ставим certbot (sudo)
+   yum install epel-release
+   yum install certbot python2-certbot-nginx 
+   certbot --nginx

@@ -1,0 +1,17 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Falcontransfer",
+    "description": "Falcontransfer Payment System",
+    "version": "1.0.0"
+  },
+  "host": "api.falcontransfer",
+  "servers": [
+    {
+      "url": "https://api.falcontransfer.com/api",
+      "description": "Production"
+    }
+  ],
+  "tags": [],
+  "paths": {}
+}

@@ -1,0 +1,105 @@
+version: "3"
+
+networks:
+  frontend:
+    ipam:
+      config:
+        - subnet: 172.23.0.0/24
+
+services:
+  migration:
+    image: cr.yandex/crp7tgcto5tup4npge0p/falconb2b-services:prod
+    command: sh -c "cd /app/packages/db && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - DB_CONN_STRING=${DB_CONN_STRING}
+      - TZ=Europe/Moscow
+    networks:
+      frontend:
+        ipv4_address: 172.23.0.3
+
+  gate:
+    image: cr.yandex/crp7tgcto5tup4npge0p/falconb2b-gate:prod
+    restart: always
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - TZ=Europe/Moscow
+    depends_on:
+      - nats
+      - redis
+      - minio
+      - serv
+    ports:
+      - "8001:8008"
+    networks:
+      frontend:
+        ipv4_address: 172.23.0.4
+
+  serv:
+    image: cr.yandex/crp7tgcto5tup4npge0p/falconb2b-services:prod
+    restart: always
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - DB_CONN_STRING=${DB_CONN_STRING}
+      - TZ=Europe/Moscow
+    ports:
+      - "8002:8012"
+    depends_on:
+      - nats
+      - redis
+      - minio
+    networks:
+      frontend:
+        ipv4_address: 172.23.0.6
+  admin:
+    restart: always
+    image: cr.yandex/crp7tgcto5tup4npge0p/falconb2b-admin:prod
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - DB_CONN_STRING=${DB_CONN_STRING}
+      - TZ=Europe/Moscow
+    ports:
+      - "8003:8009"
+    depends_on:
+      - nats
+      - redis
+      - memcached
+    networks:
+      frontend:
+        ipv4_address: 172.23.0.7
+
+  nats:
+    image: nats
+    restart: always
+    networks:
+      frontend:
+        ipv4_address: 172.23.0.8
+
+  redis:
+    image: redis
+    restart: always
+    networks:
+      frontend:
+        ipv4_address: 172.23.0.9
+
+  memcached:
+    image: memcached
+    restart: always
+    networks:
+      frontend:
+        ipv4_address: 172.23.0.10
+
+  minio:
+    image: minio/minio
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - "/data:/data"
+    command: server /data
+    networks:
+      frontend:
+        ipv4_address: 172.23.0.11
+volumes:
+  minio_data:
+    driver: local

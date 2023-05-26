@@ -1,0 +1,44 @@
+{
+  "server": {
+    "logs_file": "./daemon.log",
+    "process_name": "hse",
+    "num_workers": 1,
+    "checker_timeout": 1000,
+
+    "port": 8009,
+    "serverName": "localhost",
+    "nameSpace": "Crm",
+    "aliases": ["127.0.0.1"],
+    "aliasAction": "alias"
+  },
+  "currentApiVersion": "0.1",
+  "smsLimit": 2,
+  "tablePrefix": "hse_",
+  "debug": true,
+  "baseUrl": "http://localhost:8007",
+
+  "nameSpace": "Crm",
+  "noRestMethods": true,
+
+  "use": [],
+
+  "memcached": {
+    "servers": "localhost:11211",
+    "options": {}
+  },
+  "token": {
+    "lifetime": 86400,
+    "len": 32,
+    "sessPassLen": 3
+  },
+  "nats": {
+    "servers": ["nats://localhost:4222"],
+    "json": true
+  },
+  "uploadTmpDir": "tmp",
+  "testPassword": "4554",
+  "includes_dir": "conf",
+
+  "tx_limit_in_usd": "25000",
+  "jasperURL": "http://65.2.180.176:6543"
+}

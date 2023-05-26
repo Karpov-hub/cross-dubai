@@ -1,0 +1,22 @@
+FROM mhart/alpine-node:14 As build
+
+WORKDIR /app
+
+COPY package.json /app/package.json
+COPY lerna.json /app/lerna.json
+
+COPY src/gate-service/dist /app/src/gate-service/dist
+COPY src/gate-service/package.json /app/src/gate-service/package.json
+
+COPY bots/telegram/dist /app/bots/telegram/dist
+COPY bots/telegram/package.json /app/bots/telegram/package.json
+
+COPY packages /app/packages
+
+RUN apk add --no-cache tzdata python3 py3-pip build-base
+RUN npm install lerna@5.1.8 -global --unsafe && yarn && npx lerna bootstrap 
+
+# ENV NODE_ENV=production
+ENV TZ Europe/Vilnius
+
+CMD ["npx", "lerna", "run", "dstart", "--parallel"]

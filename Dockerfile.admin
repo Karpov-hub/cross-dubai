@@ -1,0 +1,30 @@
+FROM mhart/alpine-node:14 As build
+
+WORKDIR /app
+
+
+COPY package.json /app/package.json
+COPY lerna.json /app/lerna.json
+
+COPY admin /app/admin
+COPY admin/package.json /app/admin/package.json
+
+COPY packages /app/packages
+
+RUN apk add --update git python3 build-base curl bash && \
+    echo "Fixing PhantomJS" && \
+    curl -Ls "https://github.com/dustinblackman/phantomized/releases/download/2.1.1/dockerized-phantomjs.tar.gz" | tar xz -C / && \
+    echo "Installing node modules" && \
+    sed -i '/postinstall/d' package.json && \
+    npm install --production && \
+    echo "CD APP" && cd /app && echo "INSTALL LERNA" && npm i lerna@5.1.8 -g --unsafe && echo "INSTALL YARN" && yarn --ignore-scripts --production --no-optional && \
+    apk del git python3 build-base curl && \
+    rm -rf /usr/share/man /tmp/* /var/tmp/* /var/cache/apk/* /root/.npm /root/.node-gyp
+
+RUN apk add --no-cache python3 py3-pip build-base make gcc g++
+RUN apk --no-cache add msttcorefonts-installer 
+RUN apk add fontconfig && update-ms-fonts
+
+# ENV NODE_ENV=production
+
+CMD ["node", "/app/admin/server.js"]

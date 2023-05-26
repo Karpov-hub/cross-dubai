@@ -1,0 +1,36 @@
+FROM mhart/alpine-node:12 As build
+
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY package.json /app/package.json
+COPY lerna.json /app/lerna.json
+
+COPY src/account-service/dist /app/src/service/dist
+COPY src/account-service/package.json /app/src/service/package.json
+COPY src/account-service/package-lock.json /app/src/service/package-lock.json
+
+COPY packages/config /app/packages/config
+COPY packages/db /app/packages/db
+COPY packages/Queue /app/packages/Queue
+
+COPY packages/base/dist /app/packages/base/dist
+COPY packages/base/package.json /app/packages/base/package.json
+
+COPY packages/MemStore/dist /app/packages/MemStore/dist
+COPY packages/MemStore/package.json /app/packages/MemStore/package.json
+
+COPY packages/excel-generator/dist /app/packages/excel-generator/dist
+COPY packages/excel-generator/package.json /app/packages/excel-generator/package.json
+
+COPY packages/fileprovider/dist /app/packages/fileprovider/dist
+COPY packages/fileprovider/package.json /app/packages/fileprovider/package.json
+
+RUN yarn --ignore-scripts --production --no-optional && npx lerna bootstrap --ignore-scripts -- --production --no-optional
+
+FROM mhart/alpine-node:slim-12
+COPY --from=build /app /app
+
+WORKDIR /app
+
+CMD ["node", "/app/src/service/dist/index.js"]

@@ -1,0 +1,20 @@
+version: "3"
+
+networks:
+  frontend:
+    ipam:
+      config:
+        - subnet: 172.22.0.0/24
+
+services:
+  gate:
+    image: cr.yandex/crp7tgcto5tup4npge0p/falconb2b-gate:prod
+    restart: always
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - TZ=Europe/Moscow
+    ports:
+      - "7008:8008"
+    networks:
+      frontend:
+        ipv4_address: 172.22.0.4

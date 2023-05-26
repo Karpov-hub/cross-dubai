@@ -1,0 +1,10 @@
+{
+  "port": 3000,
+  "nats": {
+    "servers": "nats://localhost:4222",
+    "json": true
+  },
+  "b2c2_host": "http://localhost:8010/nil",
+  "coinexAttempts": 2,
+  "coinexPauseBetweenAttempts": 10
+}

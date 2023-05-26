@@ -1,0 +1,43 @@
+version: "3"
+
+networks:
+  frontend:
+    ipam:
+      config:
+        - subnet: 172.23.0.0/24
+
+services:
+  migration:
+    image: cr.yandex/crp7tgcto5tup4npge0p/falconb2b-services:prod
+    command: sh -c "npx lerna run migrate"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - DB_CONN_STRING=${DB_CONN_STRING}
+      - TZ=Europe/Moscow
+  serv:
+    image: cr.yandex/crp7tgcto5tup4npge0p/falconb2b-services:prod
+    restart: always
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - DB_CONN_STRING=${DB_CONN_STRING}
+      - SMS_CLIENT_ID=${SMS_CLIENT_ID}
+      - SMS_CLIENT_SECRET=${SMS_CLIENT_SECRET}
+      - TZ=Europe/Moscow
+    ports:
+      - "7012:8012"
+
+    networks:
+      frontend:
+        ipv4_address: 172.23.0.6
+  admin:
+    restart: always
+    image: cr.yandex/crp7tgcto5tup4npge0p/falconb2b-admin:prod
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - DB_CONN_STRING=${DB_CONN_STRING}
+      - TZ=Europe/Moscow
+    ports:
+      - "7009:8009"
+    networks:
+      frontend:
+        ipv4_address: 172.23.0.7

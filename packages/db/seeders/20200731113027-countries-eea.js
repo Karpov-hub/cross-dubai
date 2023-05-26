@@ -1,0 +1,411 @@
+"use strict";
+
+module.exports = {
+  up: (queryInterface, Sequelize) => {
+    return queryInterface.sequelize.transaction(t => {
+      // 0 - black list
+      // 1 - normal
+      // 2 - white list
+      return Promise.all([
+        queryInterface.bulkDelete("countries", null, {
+          transaction: t
+        }),
+        queryInterface.bulkInsert(
+          "countries",
+          [
+            { name: "Afghanistan", code: "93", abbr2: "AF", abbr3: "AFG", permission: 0 },
+            { name: "Albania", code: "355", abbr2: "AL", abbr3: "ALB", permission: 0 },
+            { name: "Algeria", code: "213", abbr2: "DZ", abbr3: "DZA", permission: 1 },
+            {
+              name: "American Samoa",
+              code: "1-684",
+              abbr2: "AS",
+              abbr3: "ASM", permission: 1
+            },
+            { name: "Andorra", code: "376", abbr2: "AD", abbr3: "AND", permission: 1 },
+            { name: "Angola", code: "244", abbr2: "AO", abbr3: "AGO", permission: 1 },
+            { name: "Anguilla", code: "1-264", abbr2: "AI", abbr3: "AIA", permission: 1 },
+            { name: "Antarctica", code: "672", abbr2: "AQ", abbr3: "ATA", permission: 1 },
+            {
+              name: "Antigua and Barbuda",
+              code: "1-268",
+              abbr2: "AG",
+              abbr3: "ATG", permission: 1
+            },
+            { name: "Argentina", code: "54", abbr2: "AR", abbr3: "ARG", permission: 1 },
+            { name: "Armenia", code: "374", abbr2: "AM", abbr3: "ARM", permission: 1 },
+            { name: "Aruba", code: "297", abbr2: "AW", abbr3: "ABW", permission: 1 },
+            { name: "Australia", code: "61", abbr2: "AU", abbr3: "AUS", permission: 1 },
+            { name: "Austria", code: "43", abbr2: "AT", abbr3: "AUT", permission: 2 },
+            { name: "Azerbaijan", code: "994", abbr2: "AZ", abbr3: "AZE", permission: 1 },
+            { name: "Bahamas", code: "1-242", abbr2: "BS", abbr3: "BHS", permission: 0 },
+            { name: "Bahrain", code: "973", abbr2: "BH", abbr3: "BHR", permission: 1 },
+            { name: "Bangladesh", code: "880", abbr2: "BD", abbr3: "BGD", permission: 1 },
+            { name: "Barbados", code: "1-246", abbr2: "BB", abbr3: "BRB", permission: 0 },
+            { name: "Belarus", code: "375", abbr2: "BY", abbr3: "BLR", permission: 1 },
+            { name: "Belgium", code: "32", abbr2: "BE", abbr3: "BEL", permission: 2 },
+            { name: "Belize", code: "501", abbr2: "BZ", abbr3: "BLZ", permission: 1 },
+            { name: "Benin", code: "229", abbr2: "BJ", abbr3: "BEN", permission: 1 },
+            { name: "Bermuda", code: "1-441", abbr2: "BM", abbr3: "BMU", permission: 1 },
+            { name: "Bhutan", code: "975", abbr2: "BT", abbr3: "BTN", permission: 1 },
+            { name: "Bolivia", code: "591", abbr2: "BO", abbr3: "BOL", permission: 1 },
+            {
+              name: "Bosnia and Herzegovina",
+              code: "387",
+              abbr2: "BA",
+              abbr3: "BIH", permission: 0
+            },
+            { name: "Botswana", code: "267", abbr2: "BW", abbr3: "BWA", permission: 0 },
+            { name: "Brazil", code: "55", abbr2: "BR", abbr3: "BRA", permission: 1 },
+            {
+              name: "British Indian Ocean Territory",
+              code: "246",
+              abbr2: "IO",
+              abbr3: "IOT", permission: 1
+            },
+            {
+              name: "British Virgin Islands",
+              code: "1-284",
+              abbr2: "VG",
+              abbr3: "VGB", permission: 1
+            },
+            { name: "Brunei", code: "673", abbr2: "BN", abbr3: "BRN", permission: 1 },
+            { name: "Bulgaria", code: "359", abbr2: "BG", abbr3: "BGR", permission: 2 },
+            { name: "Burkina Faso", code: "226", abbr2: "BF", abbr3: "BFA", permission: 1 },
+            { name: "Burundi", code: "257", abbr2: "BI", abbr3: "BDI", permission: 1 },
+            { name: "Cambodia", code: "855", abbr2: "KH", abbr3: "KHM", permission: 0 },
+            { name: "Cameroon", code: "237", abbr2: "CM", abbr3: "CMR", permission: 1 },
+            { name: "Canada", code: "1", abbr2: "CA", abbr3: "CAN", permission: 1 },
+            { name: "Cape Verde", code: "238", abbr2: "CV", abbr3: "CPV", permission: 1 },
+            {
+              name: "Cayman Islands",
+              code: "1-345",
+              abbr2: "KY",
+              abbr3: "CYM", permission: 1
+            },
+            {
+              name: "Central African Republic",
+              code: "236",
+              abbr2: "CF",
+              abbr3: "CAF", permission: 1
+            },
+            { name: "Chad", code: "235", abbr2: "TD", abbr3: "TCD", permission: 1 },
+            { name: "Chile", code: "56", abbr2: "CL", abbr3: "CHL", permission: 1 },
+            { name: "China", code: "86", abbr2: "CN", abbr3: "CHN", permission: 1},
+            { name: "Christmas Island", code: "61", abbr2: "CX", abbr3: "CXR", permission: 1 },
+            { name: "Cocos Islands", code: "61", abbr2: "CC", abbr3: "CCK", permission: 1 },
+            { name: "Colombia", code: "57", abbr2: "CO", abbr3: "COL", permission: 1 },
+            { name: "Comoros", code: "269", abbr2: "KM", abbr3: "COM", permission: 1 },
+            { name: "Cook Islands", code: "682", abbr2: "CK", abbr3: "COK", permission: 1 },
+            { name: "Costa Rica", code: "506", abbr2: "CR", abbr3: "CRI", permission: 1 },
+            { name: "Croatia", code: "385", abbr2: "HR", abbr3: "HRV", permission: 2 },
+            { name: "Cuba", code: "53", abbr2: "CU", abbr3: "CUB", permission: 1 },
+            { name: "Curacao", code: "599", abbr2: "CW", abbr3: "CUW", permission: 1 },
+            { name: "Cyprus", code: "357", abbr2: "CY", abbr3: "CYP", permission: 2 },
+            { name: "Czech Republic", code: "420", abbr2: "CZ", abbr3: "CZE", permission: 2 },
+            {
+              name: "Democratic Republic of the Congo",
+              code: "243",
+              abbr2: "CD",
+              abbr3: "COD", permission: 1
+            },
+            { name: "Denmark", code: "45", abbr2: "DK", abbr3: "DNK", permission: 2 },
+            { name: "Djibouti", code: "253", abbr2: "DJ", abbr3: "DJI", permission:1 },
+            { name: "Dominica", code: "1-767", abbr2: "DM", abbr3: "DMA", permission: 1 },
+            {
+              name: "Dominican Republic",
+              code: "1-809, 1-829, 1-849",
+              abbr2: "DO",
+              abbr3: "DOM", permission: 1
+            },
+            { name: "East Timor", code: "670", abbr2: "TL", abbr3: "TLS", permission: 1 },
+            { name: "Ecuador", code: "593", abbr2: "EC", abbr3: "ECU", permission: 1 },
+            { name: "Egypt", code: "20", abbr2: "EG", abbr3: "EGY", permission: 1 },
+            { name: "El Salvador", code: "503", abbr2: "SV", abbr3: "SLV", permission: 1 },
+            {
+              name: "Equatorial Guinea",
+              code: "240",
+              abbr2: "GQ",
+              abbr3: "GNQ", permission: 1
+            },
+            { name: "Eritrea", code: "291", abbr2: "ER", abbr3: "ERI", permission: 1 },
+            { name: "Estonia", code: "372", abbr2: "EE", abbr3: "EST", permission: 2 },
+            { name: "Ethiopia", code: "251", abbr2: "ET", abbr3: "ETH", permission: 0 },
+            {
+              name: "Falkland Islands",
+              code: "500",
+              abbr2: "FK",
+              abbr3: "FLK", permission: 1
+            },
+            { name: "Faroe Islands", code: "298", abbr2: "FO", abbr3: "FRO", permission: 1 },
+            { name: "Fiji", code: "679", abbr2: "FJ", abbr3: "FJI", permission: 1 },
+            { name: "Finland", code: "358", abbr2: "FI", abbr3: "FIN", permission: 2 },
+            { name: "France", code: "33", abbr2: "FR", abbr3: "FRA", permission: 2 },
+            {
+              name: "French Polynesia",
+              code: "689",
+              abbr2: "PF",
+              abbr3: "PYF", permission: 1
+            },
+            { name: "Gabon", code: "241", abbr2: "GA", abbr3: "GAB", permission: 1 },
+            { name: "Gambia", code: "220", abbr2: "GM", abbr3: "GMB", permission: 1 },
+            { name: "Georgia", code: "995", abbr2: "GE", abbr3: "GEO", permission: 1 },
+            { name: "Germany", code: "49", abbr2: "DE", abbr3: "DEU", permission: 2 },
+            { name: "Ghana", code: "233", abbr2: "GH", abbr3: "GHA", permission: 0 },
+            { name: "Gibraltar", code: "350", abbr2: "GI", abbr3: "GIB", permission: 1 },
+            { name: "Greece", code: "30", abbr2: "GR", abbr3: "GRC", permission: 2 },
+            { name: "Greenland", code: "299", abbr2: "GL", abbr3: "GRL", permission: 1 },
+            { name: "Grenada", code: "1-473", abbr2: "GD", abbr3: "GRD", permission: 1 },
+            { name: "Guam", code: "1-671", abbr2: "GU", abbr3: "GUM", permission: 1 },
+            { name: "Guatemala", code: "502", abbr2: "GT", abbr3: "GTM", permission: 1 },
+            { name: "Guernsey", code: "44-1481", abbr2: "GG", abbr3: "GGY", permission: 1 },
+            { name: "Guinea", code: "224", abbr2: "GN", abbr3: "GIN", permission: 1 },
+            { name: "Guinea-Bissau", code: "245", abbr2: "GW", abbr3: "GNB", permission: 1 },
+            { name: "Guyana", code: "592", abbr2: "GY", abbr3: "GUY", permission: 0 },
+            { name: "Haiti", code: "509", abbr2: "HT", abbr3: "HTI", permission: 1 },
+            { name: "Honduras", code: "504", abbr2: "HN", abbr3: "HND", permission: 1 },
+            { name: "Hong Kong", code: "852", abbr2: "HK", abbr3: "HKG", permission: 1 },
+            { name: "Hungary", code: "36", abbr2: "HU", abbr3: "HUN", permission: 2 },
+            { name: "Iceland", code: "354", abbr2: "IS", abbr3: "ISL", permission: 0 },
+            { name: "India", code: "91", abbr2: "IN", abbr3: "IND", permission: 1 },
+            { name: "Indonesia", code: "62", abbr2: "ID", abbr3: "IDN", permission: 1 },
+            { name: "Iran", code: "98", abbr2: "IR", abbr3: "IRN", permission: 0 },
+            { name: "Iraq", code: "964", abbr2: "IQ", abbr3: "IRQ", permission: 0 },
+            { name: "Ireland", code: "353", abbr2: "IE", abbr3: "IRL", permission: 2 },
+            { name: "Isle of Man", code: "44-1624", abbr2: "IM", abbr3: "IMN", permission: 1 },
+            { name: "Israel", code: "972", abbr2: "IL", abbr3: "ISR", permission: 1 },
+            { name: "Italy", code: "39", abbr2: "IT", abbr3: "ITA", permission: 2 },
+            { name: "Ivory Coast", code: "225", abbr2: "CI", abbr3: "CIV", permission: 1 },
+            { name: "Jamaica", code: "1-876", abbr2: "JM", abbr3: "JAM", permission: 0 },
+            { name: "Japan", code: "81", abbr2: "JP", abbr3: "JPN", permission: 1 },
+            { name: "Jersey", code: "44-1534", abbr2: "JE", abbr3: "JEY", permission: 1 },
+            { name: "Jordan", code: "962", abbr2: "JO", abbr3: "JOR", permission: 1 },
+            { name: "Kazakhstan", code: "7", abbr2: "KZ", abbr3: "KAZ", permission: 1 },
+            { name: "Kenya", code: "254", abbr2: "KE", abbr3: "KEN", permission: 1 },
+            { name: "Kiribati", code: "686", abbr2: "KI", abbr3: "KIR", permission: 1 },
+            { name: "Kosovo", code: "383", abbr2: "XK", abbr3: "XKX", permission: 1 },
+            { name: "Kuwait", code: "965", abbr2: "KW", abbr3: "KWT", permission:1 },
+            { name: "Kyrgyzstan", code: "996", abbr2: "KG", abbr3: "KGZ", permission: 1 },
+            { name: "Laos", code: "856", abbr2: "LA", abbr3: "LAO", permission: 0 },
+            { name: "Latvia", code: "371", abbr2: "LV", abbr3: "LVA", permission: 2 },
+            { name: "Lebanon", code: "961", abbr2: "LB", abbr3: "LBN", permission: 1 },
+            { name: "Lesotho", code: "266", abbr2: "LS", abbr3: "LSO", permission: 1 },
+            { name: "Liberia", code: "231", abbr2: "LR", abbr3: "LBR", permission: 1 },
+            { name: "Libya", code: "218", abbr2: "LY", abbr3: "LBY", permission: 1 },
+            { name: "Liechtenstein", code: "423", abbr2: "LI", abbr3: "LIE", permission: 2 },
+            { name: "Lithuania", code: "370", abbr2: "LT", abbr3: "LTU", permission: 2 },
+            { name: "Luxembourg", code: "352", abbr2: "LU", abbr3: "LUX", permission: 2 },
+            { name: "Macau", code: "853", abbr2: "MO", abbr3: "MAC", permission: 1 },
+            { name: "Macedonia", code: "389", abbr2: "MK", abbr3: "MKD", permission: 1 },
+            { name: "Madagascar", code: "261", abbr2: "MG", abbr3: "MDG", permission: 1 },
+            { name: "Malawi", code: "265", abbr2: "MW", abbr3: "MWI", permission: 1 },
+            { name: "Malaysia", code: "60", abbr2: "MY", abbr3: "MYS", permission: 1 },
+            { name: "Maldives", code: "960", abbr2: "MV", abbr3: "MDV", permission: 1 },
+            { name: "Mali", code: "223", abbr2: "ML", abbr3: "MLI", permission: 1 },
+            { name: "Malta", code: "356", abbr2: "MT", abbr3: "MLT", permission: 2 },
+            {
+              name: "Marshall Islands",
+              code: "692",
+              abbr2: "MH",
+              abbr3: "MHL", permission: 1
+            },
+            { name: "Mauritania", code: "222", abbr2: "MR", abbr3: "MRT", permission: 1 },
+            { name: "Mauritius", code: "230", abbr2: "MU", abbr3: "MUS", permission: 0 },
+            { name: "Mayotte", code: "262", abbr2: "YT", abbr3: "MYT", permission: 1 },
+            { name: "Mexico", code: "52", abbr2: "MX", abbr3: "MEX", permission: 1 },
+            { name: "Micronesia", code: "691", abbr2: "FM", abbr3: "FSM", permission: 1 },
+            { name: "Moldova", code: "373", abbr2: "MD", abbr3: "MDA", permission: 1 },
+            { name: "Monaco", code: "377", abbr2: "MC", abbr3: "MCO", permission: 1 },
+            { name: "Mongolia", code: "976", abbr2: "MN", abbr3: "MNG", permission: 0 },
+            { name: "Montenegro", code: "382", abbr2: "ME", abbr3: "MNE", permission: 1 },
+            { name: "Montserrat", code: "1-664", abbr2: "MS", abbr3: "MSR", permission: 1 },
+            { name: "Morocco", code: "212", abbr2: "MA", abbr3: "MAR", permission: 1 },
+            { name: "Mozambique", code: "258", abbr2: "MZ", abbr3: "MOZ", permission: 1 },
+            { name: "Myanmar", code: "95", abbr2: "MM", abbr3: "MMR", permission: 0 },
+            { name: "Namibia", code: "264", abbr2: "NA", abbr3: "NAM", permission: 1 },
+            { name: "Nauru", code: "674", abbr2: "NR", abbr3: "NRU", permission: 1 },
+            { name: "Nepal", code: "977", abbr2: "NP", abbr3: "NPL", permission: 1 },
+            { name: "Netherlands", code: "31", abbr2: "NL", abbr3: "NLD", permission: 2 },
+            {
+              name: "Netherlands Antilles",
+              code: "599",
+              abbr2: "AN",
+              abbr3: "ANT", permission: 1
+            },
+            { name: "New Caledonia", code: "687", abbr2: "NC", abbr3: "NCL", permission: 1 },
+            { name: "New Zealand", code: "64", abbr2: "NZ", abbr3: "NZL", permission: 1 },
+            { name: "Nicaragua", code: "505", abbr2: "NI", abbr3: "NIC", permission: 0 },
+            { name: "Niger", code: "227", abbr2: "NE", abbr3: "NER", permission: 1 },
+            { name: "Nigeria", code: "234", abbr2: "NG", abbr3: "NGA", permission: 1 },
+            { name: "Niue", code: "683", abbr2: "NU", abbr3: "NIU", permission: 1 },
+            { name: "North Korea", code: "850", abbr2: "KP", abbr3: "PRK" , permission: 0},
+            {
+              name: "Northern Mariana Islands",
+              code: "1-670",
+              abbr2: "MP",
+              abbr3: "MNP", permission: 1
+            },
+            { name: "Norway", code: "47", abbr2: "NO", abbr3: "NOR" , permission: 2},
+            { name: "Oman", code: "968", abbr2: "OM", abbr3: "OMN", permission: 1 },
+            { name: "Pakistan", code: "92", abbr2: "PK", abbr3: "PAK" , permission: 0},
+            { name: "Palau", code: "680", abbr2: "PW", abbr3: "PLW" , permission: 1},
+            { name: "Palestine", code: "970", abbr2: "PS", abbr3: "PSE", permission: 1 },
+            { name: "Panama", code: "507", abbr2: "PA", abbr3: "PAN", permission: 0 },
+            {
+              name: "Papua New Guinea",
+              code: "675",
+              abbr2: "PG",
+              abbr3: "PNG", permission: 1
+            },
+            { name: "Paraguay", code: "595", abbr2: "PY", abbr3: "PRY" , permission: 1},
+            { name: "Peru", code: "51", abbr2: "PE", abbr3: "PER", permission: 1 },
+            { name: "Philippines", code: "63", abbr2: "PH", abbr3: "PHL" , permission: 1},
+            { name: "Pitcairn", code: "64", abbr2: "PN", abbr3: "PCN" , permission: 1},
+            { name: "Poland", code: "48", abbr2: "PL", abbr3: "POL", permission: 2 },
+            { name: "Portugal", code: "351", abbr2: "PT", abbr3: "PRT" , permission: 2},
+            {
+              name: "Puerto Rico",
+              code: "1-787, 1-939",
+              abbr2: "PR",
+              abbr3: "PRI", permission: 1
+            },
+            { name: "Qatar", code: "974", abbr2: "QA", abbr3: "QAT", permission: 1 },
+            {
+              name: "Republic of the Congo",
+              code: "242",
+              abbr2: "CG",
+              abbr3: "COG", permission: 1
+            },
+            { name: "Reunion", code: "262", abbr2: "RE", abbr3: "REU" , permission: 1},
+            { name: "Romania", code: "40", abbr2: "RO", abbr3: "ROU" , permission: 2},
+            { name: "Russia", code: "7", abbr2: "RU", abbr3: "RUS" , permission: 1},
+            { name: "Rwanda", code: "250", abbr2: "RW", abbr3: "RWA" , permission: 1},
+            {
+              name: "Saint Barthelemy",
+              code: "590",
+              abbr2: "BL",
+              abbr3: "BLM", permission: 1
+            },
+            { name: "Saint Helena", code: "290", abbr2: "SH", abbr3: "SHN" , permission: 1},
+            {
+              name: "Saint Kitts and Nevis",
+              code: "1-869",
+              abbr2: "KN",
+              abbr3: "KNA", permission: 1
+            },
+            { name: "Saint Lucia", code: "1-758", abbr2: "LC", abbr3: "LCA" , permission: 1},
+            { name: "Saint Martin", code: "590", abbr2: "MF", abbr3: "MAF", permission: 1 },
+            {
+              name: "Saint Pierre and Miquelon",
+              code: "508",
+              abbr2: "PM",
+              abbr3: "SPM", permission: 1
+            },
+            {
+              name: "Saint Vincent and the Grenadines",
+              code: "1-784",
+              abbr2: "VC",
+              abbr3: "VCT", permission: 1
+            },
+            { name: "Samoa", code: "685", abbr2: "WS", abbr3: "WSM" , permission: 1},
+            { name: "San Marino", code: "378", abbr2: "SM", abbr3: "SMR", permission: 1 },
+            {
+              name: "Sao Tome and Principe",
+              code: "239",
+              abbr2: "ST",
+              abbr3: "STP", permission: 1
+            },
+            { name: "Saudi Arabia", code: "966", abbr2: "SA", abbr3: "SAU" , permission: 1},
+            { name: "Senegal", code: "221", abbr2: "SN", abbr3: "SEN" , permission: 1},
+            { name: "Serbia", code: "381", abbr2: "RS", abbr3: "SRB", permission: 1 },
+            { name: "Seychelles", code: "248", abbr2: "SC", abbr3: "SYC", permission: 1 },
+            { name: "Sierra Leone", code: "232", abbr2: "SL", abbr3: "SLE", permission: 1 },
+            { name: "Singapore", code: "65", abbr2: "SG", abbr3: "SGP", permission: 1 },
+            { name: "Sint Maarten", code: "1-721", abbr2: "SX", abbr3: "SXM", permission: 1 },
+            { name: "Slovakia", code: "421", abbr2: "SK", abbr3: "SVK", permission: 2 },
+            { name: "Slovenia", code: "386", abbr2: "SI", abbr3: "SVN", permission: 2},
+            { name: "Solomon Islands", code: "677", abbr2: "SB", abbr3: "SLB", permission: 1 },
+            { name: "Somalia", code: "252", abbr2: "SO", abbr3: "SOM", permission: 1 },
+            { name: "South Africa", code: "27", abbr2: "ZA", abbr3: "ZAF" , permission: 1},
+            { name: "South Korea", code: "82", abbr2: "KR", abbr3: "KOR" , permission: 1},
+            { name: "South Sudan", code: "211", abbr2: "SS", abbr3: "SSD" , permission: 1},
+            { name: "Spain", code: "34", abbr2: "ES", abbr3: "ESP" , permission: 2},
+            { name: "Sri Lanka", code: "94", abbr2: "LK", abbr3: "LKA" , permission: 0},
+            { name: "Sudan", code: "249", abbr2: "SD", abbr3: "SDN", permission: 1 },
+            { name: "Suriname", code: "597", abbr2: "SR", abbr3: "SUR", permission: 1 },
+            {
+              name: "Svalbard and Jan Mayen",
+              code: "47",
+              abbr2: "SJ",
+              abbr3: "SJM", permission: 1
+            },
+            { name: "Swaziland", code: "268", abbr2: "SZ", abbr3: "SWZ", permission: 1 },
+            { name: "Sweden", code: "46", abbr2: "SE", abbr3: "SWE", permission: 2 },
+            { name: "Switzerland", code: "41", abbr2: "CH", abbr3: "CHE" , permission: 1},
+            { name: "Syria", code: "963", abbr2: "SY", abbr3: "SYR", permission: 0 },
+            { name: "Taiwan", code: "886", abbr2: "TW", abbr3: "TWN" , permission: 1},
+            { name: "Tajikistan", code: "992", abbr2: "TJ", abbr3: "TJK" , permission: 1},
+            { name: "Tanzania", code: "255", abbr2: "TZ", abbr3: "TZA", permission: 1 },
+            { name: "Thailand", code: "66", abbr2: "TH", abbr3: "THA" , permission: 1},
+            { name: "Togo", code: "228", abbr2: "TG", abbr3: "TGO", permission: 1 },
+            { name: "Tokelau", code: "690", abbr2: "TK", abbr3: "TKL" , permission: 1},
+            { name: "Tonga", code: "676", abbr2: "TO", abbr3: "TON" , permission: 1},
+            {
+              name: "Trinidad and Tobago",
+              code: "1-868",
+              abbr2: "TT",
+              abbr3: "TTO", permission: 0
+            },
+            { name: "Tunisia", code: "216", abbr2: "TN", abbr3: "TUN", permission: 0 },
+            { name: "Turkey", code: "90", abbr2: "TR", abbr3: "TUR" , permission: 1},
+            { name: "Turkmenistan", code: "993", abbr2: "TM", abbr3: "TKM" , permission: 1},
+            {
+              name: "Turks and Caicos Islands",
+              code: "1-649",
+              abbr2: "TC",
+              abbr3: "TCA", permission: 1
+            },
+            { name: "Tuvalu", code: "688", abbr2: "TV", abbr3: "TUV", permission: 1 },
+            {
+              name: "U.S. Virgin Islands",
+              code: "1-340",
+              abbr2: "VI",
+              abbr3: "VIR", permission: 1
+            },
+            { name: "Uganda", code: "256", abbr2: "UG", abbr3: "UGA", permission: 0 },
+            { name: "Ukraine", code: "380", abbr2: "UA", abbr3: "UKR" , permission: 1},
+            {
+              name: "United Arab Emirates",
+              code: "971",
+              abbr2: "AE",
+              abbr3: "ARE", permission: 1
+            },
+            { name: "United Kingdom", code: "44", abbr2: "GB", abbr3: "GBR" , permission: 1},
+            { name: "United States", code: "1", abbr2: "US", abbr3: "USA", permission: 0 },
+            { name: "Uruguay", code: "598", abbr2: "UY", abbr3: "URY" , permission: 1},
+            { name: "Uzbekistan", code: "998", abbr2: "UZ", abbr3: "UZB", permission: 1 },
+            { name: "Vanuatu", code: "678", abbr2: "VU", abbr3: "VUT" , permission: 0},
+            { name: "Vatican", code: "379", abbr2: "VA", abbr3: "VAT" , permission: 1},
+            { name: "Venezuela", code: "58", abbr2: "VE", abbr3: "VEN" , permission: 1},
+            { name: "Vietnam", code: "84", abbr2: "VN", abbr3: "VNM" , permission: 1},
+            {
+              name: "Wallis and Futuna",
+              code: "681",
+              abbr2: "WF",
+              abbr3: "WLF", permission: 1
+            },
+            { name: "Western Sahara", code: "212", abbr2: "EH", abbr3: "ESH", permission: 1 },
+            { name: "Yemen", code: "967", abbr2: "YE", abbr3: "YEM" , permission: 0},
+            { name: "Zambia", code: "260", abbr2: "ZM", abbr3: "ZMB" , permission: 1},
+            { name: "Zimbabwe", code: "263", abbr2: "ZW", abbr3: "ZWE", permission: 0 }
+          ],
+          { transaction: t }
+        )
+      ]);
+    });
+  },
+
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.bulkDelete("countries", null, {});
+  }
+};

@@ -1,0 +1,22 @@
+{
+  "name": "jplatform",
+  "devDependencies": {
+    "lerna": "^3.19.0"
+  },
+  "scripts": {
+    "start": "lerna run watch --parallel",
+    "test": "lerna run test --scope=gate-server && lerna run test --scope=auth-service && lerna run test --scope=account-service && lerna run test --scope=statement-service && lerna run test --scope=currency-service &&  lerna run test --scope=callback-service && lerna run test --scope=merchant-service  && lerna run test --scope=falcon-service  && lerna run test --scope=tariff-service && lerna run test --scope=kyc-service && lerna run test --scope=mail-service && lerna run test --scope=report-service && npx lerna run test --scope=order-service && npx lerna run test --scope=support-service",
+    "atest": "lerna run atest --scope=gate-server && lerna run atest --scope=auth-service && lerna run atest --scope=account-service && lerna run atest --scope=statement-service && lerna run atest --scope=currency-service && lerna run atest --scope=callback-service && lerna run atest --scope=merchant-service && lerna run atest --scope=falcon-service && lerna run atest --scope=tariff-service && npx lerna run atest --scope=order-service && npx lerna run atest --scope=support-service",
+    "migrate": "npx lerna run migrate --scope=@lib/db",
+    "migrate:undo": "npx lerna run reset:prev --scope=@lib/db",
+    "migrate:undo:all": "npx lerna run migrate:down --scope=@lib/db"
+  },
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "src/*",
+    "admin/",
+    "bots/*"
+  ],
+  "dependencies": {}
+}

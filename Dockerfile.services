@@ -1,0 +1,73 @@
+FROM mhart/alpine-node:14 As build
+
+WORKDIR /app
+
+COPY package.json /app/package.json
+COPY lerna.json /app/lerna.json
+
+COPY bots/test/dist /app/bots/test/dist
+COPY bots/test/package.json /app/bots/test/package.json
+
+COPY src/account-service/dist /app/src/account-service/dist
+COPY src/account-service/package.json /app/src/account-service/package.json
+
+COPY src/auth-service/dist /app/src/auth-service/dist
+COPY src/auth-service/package.json /app/src/auth-service/package.json
+
+COPY src/cron-daemon/dist /app/src/cron-daemon/dist
+COPY src/cron-daemon/package.json /app/src/cron-daemon/package.json
+
+COPY src/ccoin-service/dist /app/src/ccoin-service/dist
+COPY src/ccoin-service/package.json /app/src/ccoin-service/package.json
+
+COPY src/currency-service/dist /app/src/currency-service/dist
+COPY src/currency-service/package.json /app/src/currency-service/package.json
+
+
+COPY src/falcon-service/dist /app/src/falcon-service/dist
+COPY src/falcon-service/package.json /app/src/falcon-service/package.json
+
+COPY src/file-gate/dist /app/src/file-gate/dist
+COPY src/file-gate/package.json /app/src/file-gate/package.json
+
+COPY src/file-service/dist /app/src/file-service/dist
+COPY src/file-service/package.json /app/src/file-service/package.json
+
+COPY src/kyc-service/dist /app/src/kyc-service/dist
+COPY src/kyc-service/package.json /app/src/kyc-service/package.json
+
+COPY src/mail-service/dist /app/src/mail-service/dist
+COPY src/mail-service/package.json /app/src/mail-service/package.json
+
+COPY src/merchant-service/dist /app/src/merchant-service/dist
+COPY src/merchant-service/src/lib/template /app/src/merchant-service/dist/lib/template
+COPY src/merchant-service/package.json /app/src/merchant-service/package.json
+
+COPY src/support-service/dist /app/src/support-service/dist
+COPY src/support-service/package.json /app/src/support-service/package.json
+
+COPY src/tariff-service/dist /app/src/tariff-service/dist
+COPY src/tariff-service/package.json /app/src/tariff-service/package.json
+
+COPY src/report-service/dist /app/src/report-service/dist
+COPY src/report-service/package.json /app/src/report-service/package.json
+
+COPY src/telegram-service/dist /app/src/telegram-service/dist
+COPY src/telegram-service/package.json /app/src/telegram-service/package.json
+
+COPY src/order-service/dist /app/src/order-service/dist
+COPY src/order-service/package.json /app/src/order-service/package.json
+
+COPY packages /app/packages
+
+RUN apk add --update git python3 build-base curl bash && \
+    echo "Fixing PhantomJS" && \
+    curl -Ls "https://github.com/dustinblackman/phantomized/releases/download/2.1.1/dockerized-phantomjs.tar.gz" | tar xz -C / && \
+    echo "Installing node modules" && \
+    sed -i '/postinstall/d' package.json && \
+    npm install --production && \
+    echo "CD APP" && cd /app && echo "INSTALL LERNA" && npm i lerna@5.1.8 -g --unsafe && echo "INSTALL YARN" && yarn && npx lerna bootstrap && \
+    apk del git python3 build-base curl && \
+    rm -rf /usr/share/man /tmp/* /var/tmp/* /var/cache/apk/* /root/.npm /root/.node-gyp
+
+CMD ["npx", "lerna", "run", "dstart", "--parallel"]

@@ -1,0 +1,104 @@
+stages:
+  - tests
+  - admin
+  - startall
+  - buildimages
+  - servergate
+  - serverbe
+
+tests:
+  stage: tests
+  image: alpine
+  script:
+    - apk add --no-cache rsync openssh
+    - mkdir -p ~/.ssh
+    - echo "HOST"
+    - echo "$SSH_USER_HOST"
+    - echo "$SSH_KEY_CROSS" >> ~/.ssh/id_dsa
+    - chmod 600 ~/.ssh/id_dsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+
+    - ssh ec2-user@3.28.59.103 'export PATH='$REMOTE_PATH' && rm -R /home/ec2-user/tests && mkdir /home/ec2-user/tests'
+
+    - rsync -ramz --stats --delete ./packages $SSH_USER_HOST:/home/ec2-user/tests
+    - rsync -ramz --stats --delete ./bots $SSH_USER_HOST:/home/ec2-user/tests
+    - rsync -ramz --stats --delete ./src $SSH_USER_HOST:/home/ec2-user/tests
+    - rsync -ramz --stats --delete ./lerna.json $SSH_USER_HOST:/home/ec2-user/tests/lerna.json
+    - rsync -ramz --stats --delete ./package.json $SSH_USER_HOST:/home/ec2-user/tests/package.json
+    - rsync -ramz --stats --delete ./docs $SSH_USER_HOST:/home/ec2-user/tests
+    - ssh $SSH_USER_HOST 'export PATH='$REMOTE_PATH' && export NVM_DIR=~/.nvm && source ~/.nvm/nvm.sh && nvm use 16 && export NODE_ENV=test && sudo docker restart nats && killall node ; cd /home/ec2-user/tests && yarn && npx lerna bootstrap && mkdir docs/json ; npx lerna run migrate && sleep 1'
+    - ssh $SSH_USER_HOST 'export PATH='$REMOTE_PATH' && export NVM_DIR=~/.nvm && source ~/.nvm/nvm.sh && nvm use 16 && killall node ; cd /home/ec2-user/tests && sleep 5 && echo "BUILD START" && npx lerna run build && echo "BUILD DOC" && npx lerna run builddocs && export NODE_ENV=test && echo "RUN START" && npx lerna run start && sleep 60 && echo "START TEST" && npm run atest && killall node && node packages/chai-documentator/lib/htmlgenerator.js'
+
+  only:
+    - test
+    - prod
+
+bldadmin:
+  image: kolbaskin/cmdnode
+  stage: admin
+  script:
+    - mkdir -p ~/.ssh
+    - echo "$SSH_KEY_CROSS" >> ~/.ssh/id_dsa
+    - chmod 600 ~/.ssh/id_dsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - chmod 755 ./.ci_admin_build.sh
+    - ./.ci_admin_build.sh
+    - cd /build
+
+    - ssh $SSH_USER_HOST 'export PATH='$REMOTE_PATH' && export NVM_DIR=~/.nvm && source ~/.nvm/nvm.sh && nvm use 16 && cd /home/ec2-user/tests/admin ; forever stop server.js ; sleep 1'
+
+    - rsync -rav --delete ./ $SSH_USER_HOST:/home/ec2-user/tests/admin
+
+    - ssh $SSH_USER_HOST 'export PATH='$REMOTE_PATH' && export NVM_DIR=~/.nvm && source ~/.nvm/nvm.sh && nvm use 16 && cd /home/ec2-user/tests && sleep 5 && yarn && npx lerna bootstrap --scope=admin-server ; cd ./admin ; mkdir tmp; mkdir userdocs; mkdir userfiles'
+
+  only:
+    - test
+    - prod
+
+# Production block
+prodbuild:
+  stage: buildimages
+  image: alpine
+  script:
+    - apk add --no-cache rsync openssh
+    - mkdir -p ~/.ssh
+    - echo "$SSH_KEY_CROSS" >> ~/.ssh/id_dsa
+    - chmod 600 ~/.ssh/id_dsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - rsync -ramz --stats --delete ./Dockerfile.admin $SSH_USER_HOST:/home/ec2-user/tests/Dockerfile.admin
+    - rsync -ramz --stats --delete ./Dockerfile.services $SSH_USER_HOST:/home/ec2-user/tests/Dockerfile.services
+    - rsync -ramz --stats --delete ./Dockerfile.gate $SSH_USER_HOST:/home/ec2-user/tests/Dockerfile.gate
+
+    - ssh $SSH_USER_HOST 'export PATH='$REMOTE_PATH' && cd /home/ec2-user/tests && yarn cache clean && docker rmi -f $(docker images -a -q) ; docker build --tag cr.yandex/crp7tgcto5tup4npge0p/falconb2b-gate:prod --file Dockerfile.gate . && docker build --tag cr.yandex/crp7tgcto5tup4npge0p/falconb2b-admin:prod --file Dockerfile.admin .  && docker build --tag cr.yandex/crp7tgcto5tup4npge0p/falconb2b-services:prod --file Dockerfile.services .  &&  docker push cr.yandex/crp7tgcto5tup4npge0p/falconb2b-gate:prod && docker push cr.yandex/crp7tgcto5tup4npge0p/falconb2b-admin:prod && docker push cr.yandex/crp7tgcto5tup4npge0p/falconb2b-services:prod'
+  only:
+    - prod
+    - test
+
+#Run on yandex test
+testgate:
+  stage: servergate
+  image: alpine
+  script:
+    - apk add --no-cache rsync openssh
+    - mkdir -p ~/.ssh
+    - echo "$SSH_KEY_CROSS" >> ~/.ssh/id_dsa
+    - chmod 600 ~/.ssh/id_dsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+
+    - ssh $SSH_USER_HOST 'export PATH='$REMOTE_PATH' && export NODE_ENV=staging && export NO_TELEGRAM=1 && cd /home/ec2-user/services && docker-compose down ; docker rmi -f $(docker images -a -q) ; export DB_CONN_STRING='$DB_CONN_STRING_STAGING' && docker-compose up -d && docker-compose restart'
+  only:
+    - test
+
+crossbe:
+  stage: serverbe
+  image: alpine
+  script:
+    - apk add --no-cache rsync openssh
+    - mkdir -p ~/.ssh
+    - echo "$SSH_KEY_CROSS" >> ~/.ssh/id_dsa
+    - chmod 600 ~/.ssh/id_dsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+
+    - ssh $SSH_USER_HOST_CROSSBE 'export PATH=/home/ec2-user/yandex-cloud/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/ec2-user/.local/bin:/home/ec2-user/bin && export NODE_ENV=cross && export SMS_CLIENT_ID='$SMS_CLIENT_ID' && export SMS_CLIENT_SECRET='$SMS_CLIENT_SECRET' && export DB_CONN_STRING='$DB_CONN_STRING_CROSS' && cd /home/ec2-user/services && docker-compose down ; docker rmi -f $(docker images -a -q) ; docker-compose up -d'
+  only:
+    - prod

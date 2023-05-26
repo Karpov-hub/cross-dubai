@@ -1,0 +1,83 @@
+{
+  "development": {
+    "username": "hse",
+    "password": "hse",
+    "database": "falconb2bdb",
+    "schema": "crossdubai",
+    "searchPath": "crossdubai",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "seederStorage": "sequelize",
+    "logging": false,
+    "seederStorageTableName": "sequelize_data",
+    "dialectOptions": {
+      "prependSearchPath": true
+    }
+  },
+  "localtest": {
+    "username": "hse",
+    "password": "hse",
+    "database": "falconb2btestdb",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "logging": false,
+    "seederStorage": "sequelize",
+    "seederStorageTableName": "sequelize_data",
+    "dialectOptions": {
+      "prependSearchPath": true
+    }
+  },
+  "test": {
+    "username": "cross",
+    "password": "cross",
+    "database": "crossdb",
+    "host": "localhost",
+    "dialect": "postgres",
+    "seederStorage": "sequelize",
+    "logging": false,
+    "seederStorageTableName": "sequelize_data",
+    "schema": "test",
+    "searchPath": "test",
+    "dialectOptions": {
+      "prependSearchPath": true
+    }
+  },
+  "dev": {
+    "use_env_variable": "DB_CONN_STRING",
+    "dialect": "postgres",
+    "seederStorage": "sequelize",
+    "logging": false,
+    "seederStorageTableName": "sequelize_data"
+  },
+  "staging": {
+    "use_env_variable": "DB_CONN_STRING",
+    "dialect": "postgres",
+    "seederStorage": "sequelize",
+    "logging": false,
+    "seederStorageTableName": "sequelize_data",
+    "schema": "staging",
+    "searchPath": "staging",
+    "dialectOptions": {
+      "prependSearchPath": true
+    }
+  },
+  "production": {
+    "use_env_variable": "DB_CONN_STRING",
+    "dialect": "postgres",
+    "seederStorage": "sequelize",
+    "logging": false,
+    "seederStorageTableName": "sequelize_data"
+  },
+  "cross": {
+    "use_env_variable": "DB_CONN_STRING",
+    "schema": "crossdubai",
+    "searchPath": "crossdubai",
+    "dialect": "postgres",
+    "seederStorage": "sequelize",
+    "logging": false,
+    "seederStorageTableName": "sequelize_data",
+    "dialectOptions": {
+      "prependSearchPath": true
+    }
+  }
+}

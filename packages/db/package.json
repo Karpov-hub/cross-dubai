@@ -1,0 +1,24 @@
+{
+  "name": "@lib/db",
+  "version": "0.0.1",
+  "main": "models/index.js",
+  "scripts": {
+    "migrate": "export MIGRATE_TABLE=SequelizeMeta && export MIGRATE_DIR=migrations && node src/migrator.js up",
+    "migrate:down": "export MIGRATE_TABLE=SequelizeMeta && export MIGRATE_DIR=migrations && node src/migrator.js down",
+    "migrate:next": "export MIGRATE_TABLE=SequelizeMeta && export MIGRATE_DIR=migrations && node src/migrator.js next",
+    "reset:prev": "export MIGRATE_TABLE=SequelizeMeta && export MIGRATE_DIR=migrations && node src/migrator.js prev",
+    "seeders": "export MIGRATE_TABLE=sequelize_data && export MIGRATE_DIR=seeders && node src/migrator.js up"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@lib/base": "^0.0.1",
+    "@lib/config": "^0.0.1",
+    "@lib/queue": "^0.0.1",
+    "config": "^3.2.2",
+    "pg": "^8.8.0",
+    "pg-hstore": "^2.3.3",
+    "sequelize-cli-enovate": "0.1.0",
+    "sequelize-enovate": "^0.1.0"
+  }
+}
